@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapFlow | Gridiron Performance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .nfl-gradient { background: linear-gradient(135deg, #013369 0%, #d50a0a 100%); }
+        .card-blur { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1); }
+        /* Suavizar a transição dos modais */
+        #registerModal, #loginModal { transition: opacity 0.3s ease; }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans">
+
+    <nav class="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center sticky top-0 z-50">
+        <div class="text-2xl font-black italic tracking-tighter uppercase">Snap<span class="text-red-500">Flow</span></div>
+        
+        <div class="hidden md:flex space-x-6 text-sm font-bold uppercase">
+            <a href="#" class="hover:text-red-500 transition">Treinos</a>
+            <a href="#" class="hover:text-red-500 transition">Playbook</a>
+            <a href="#" class="hover:text-red-500 transition">Comunidade</a>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div id="weather" class="text-xs bg-slate-700/50 p-2 rounded-lg border border-slate-600 flex items-center">
+                <i class="fas fa-temperature-high mr-2 text-blue-400" id="weather-icon"></i>
+                <span id="temp">Localizando...</span>
+            </div>
+            
+            <button onclick="toggleModal('loginModal')" class="bg-red-600 px-4 py-2 rounded font-bold text-xs uppercase hover:bg-red-700 transition">Entrar</button>
+        </div>
+    </nav>
+
+    <header class="relative h-[60vh] flex items-center justify-center text-center p-6 nfl-gradient">
+        <div class="max-w-3xl">
+            <h1 class="text-5xl md:text-7xl font-black mb-4 uppercase">Domine o Campo</h1>
+            <p class="text-lg opacity-90 mb-8">A plataforma definitiva para atletas de Futebol Americano. Rotas, drills e táticas de elite.</p>
+            <button onclick="toggleModal('registerModal')" class="bg-white text-blue-900 px-8 py-3 rounded-full font-bold text-lg shadow-xl hover:scale-105 transition">Começar Treino Grátis</button>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto py-12 px-6">
+        <h2 class="text-3xl font-bold mb-8 border-l-4 border-red-600 pl-4 uppercase tracking-tight">Módulos de Performance</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-red-500 transition group">
+                <div class="h-48 bg-slate-700 flex items-center justify-center relative overflow-hidden">
+                    <i class="fas fa-play-circle text-5xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition cursor-pointer"></i>
+                    <span class="absolute top-2 left-2 bg-red-600 text-[10px] px-2 py-1 rounded font-bold">VÍDEO</span>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-bold text-xl">Footwork: Ladder Drills</h3>
+                    <p class="text-slate-400 text-sm mt-2">Melhore sua agilidade e explosão inicial com exercícios de escada.</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-blue-500 transition group">
+                <div class="h-48 bg-slate-700 flex items-center justify-center relative">
+                    <i class="fas fa-project-diagram text-5xl opacity-50 group-hover:opacity-100 transition"></i>
+                    <span class="absolute top-2 left-2 bg-blue-600 text-[10px] px-2 py-1 rounded font-bold">PLAYBOOK</span>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-bold text-xl">Route Tree: The Post</h3>
+                    <p class="text-slate-400 text-sm mt-2">Como fazer o break perfeito a 45 graus e vencer o Safety.</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-green-500 transition group">
+                <div class="h-48 bg-slate-700 flex items-center justify-center relative">
+                    <i class="fas fa-users text-5xl opacity-50 group-hover:opacity-100 transition"></i>
+                    <span class="absolute top-2 left-2 bg-green-600 text-[10px] px-2 py-1 rounded font-bold">TÁTICA</span>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-bold text-xl">Leitura de Cover 2</h3>
+                    <p class="text-slate-400 text-sm mt-2">Entenda os espaços vazios entre o Cornerback e o Safety.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="registerModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
+        <div class="bg-slate-800 w-full max-w-md p-8 rounded-2xl border border-slate-600 relative shadow-2xl">
+            <button onclick="toggleModal('registerModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition text-xl">✕</button>
+            <h2 class="text-2xl font-bold mb-6 text-center uppercase italic">Recrutamento de Atleta</h2>
+            <form class="space-y-4">
+                <input type="email" placeholder="E-mail" class="w-full p-3 rounded bg-slate-900 border border-slate-700 focus:border-red-500 outline-none text-sm transition">
+                <input type="password" placeholder="Senha" class="w-full p-3 rounded bg-slate-900 border border-slate-700 focus:border-red-500 outline-none text-sm transition">
+                <input type="text" placeholder="Seu Time Atual (Brasil ou NFL)" class="w-full p-3 rounded bg-slate-900 border border-slate-700 focus:border-red-500 outline-none text-sm transition">
+                <select class="w-full p-3 rounded bg-slate-900 border border-slate-700 text-slate-400 text-sm outline-none focus:border-red-500 transition">
+                    <option disabled selected>Time da NFL favorito...</option>
+                    <option>Kansas City Chiefs</option>
+                    <option>Dallas Cowboys</option>
+                    <option>SF 49ers</option>
+                    <option>Philadelphia Eagles</option>
+                </select>
+                <button type="submit" class="w-full nfl-gradient py-3 rounded font-black uppercase tracking-widest mt-4 hover:scale-[1.02] transition shadow-lg">Finalizar Cadastro</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="loginModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
+        <div class="bg-slate-800 w-full max-w-sm p-8 rounded-2xl border border-slate-600 relative shadow-2xl">
+            <button onclick="toggleModal('loginModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
+            <h2 class="text-2xl font-bold mb-6 text-center uppercase italic">Acessar Conta</h2>
+            <form class="space-y-4">
+                <input type="email" placeholder="E-mail" class="w-full p-3 rounded bg-slate-900 border border-slate-700 outline-none text-sm focus:border-red-500 transition">
+                <input type="password" placeholder="Senha" class="w-full p-3 rounded bg-slate-900 border border-slate-700 outline-none text-sm focus:border-red-500 transition">
+                <button type="submit" class="w-full bg-red-600 py-3 rounded font-black uppercase tracking-widest mt-4 hover:bg-red-700 transition">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        // 1. IMPORTANDO OS MÓDULOS DO FIREBASE
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // 2. CONFIGURAÇÃO DO SEU PROJETO (Substitua pelos seus dados do Firebase)
+        const firebaseConfig = {
+            apiKey: "AIzaSyA62bThIoyynk7QVA1_9csgYFbRrXoT2eI",
+            authDomain: "snapflow-23372.firebaseapp.com",
+            projectId: "snapflow-23372",
+            storageBucket: "snapflow-23372.appspot.com",
+            messagingSenderId: "COLE_SEU_SENDER_ID_AQUI",
+            appId: "COLE_SEU_APP_ID_AQUI"
+        };
+
+        // Inicializando Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- FUNÇÃO DE ABRIR/FECHAR MODAL ---
+        window.toggleModal = function(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.toggle('hidden');
+                modal.classList.toggle('flex');
+            }
+        }
+
+        // --- FUNÇÃO: REGISTRAR ATLETA NO BANCO ---
+        async function registrarAtleta(e) {
+            e.preventDefault();
+            const form = e.target;
+            const email = form[0].value;
+            const senha = form[1].value;
+            const timeAtual = form[2].value;
+            const timeNFL = form[3].value;
+
+            try {
+                // Cria o usuário para login
+                const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+                const user = userCredential.user;
+
+                // Salva as informações extras no Firestore
+                await setDoc(doc(db, "atletas", user.uid), {
+                    email: email,
+                    time_atual: timeAtual,
+                    time_nfl: timeNFL,
+                    data_cadastro: new Date().toISOString()
+                });
+
+                alert("Touchdown! Cadastro realizado com sucesso.");
+                toggleModal('registerModal');
+            } catch (error) {
+                alert("Erro ao recrutar: " + error.message);
+            }
+        }
+
+        // --- FUNÇÃO: LOGIN DE ATLETA ---
+        async function logarAtleta(e) {
+            e.preventDefault();
+            const email = e.target[0].value;
+            const senha = e.target[1].value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, senha);
+                alert("Bem-vindo de volta ao campo!");
+                toggleModal('loginModal');
+            } catch (error) {
+                alert("Falha no login: Verifique e-mail e senha.");
+            }
+        }
+
+        // --- LÓGICA DE CLIMA ---
+        async function getWeather() {
+            const apiKey = "0390abddc107b13d8002540d1dd10fc7"; 
+            const tempDisplay = document.getElementById('temp');
+            const iconDisplay = document.getElementById('weather-icon');
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    try {
+                        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=pt_br`);
+                        const data = await response.json();
+                        if (response.ok) {
+                            tempDisplay.innerText = `${data.name}, ${Math.round(data.main.temp)}°C`;
+                            iconDisplay.className = "fas fa-cloud-sun mr-2 text-yellow-400";
+                        }
+                    } catch (error) { tempDisplay.innerText = "Erro no clima"; }
+                }, () => { tempDisplay.innerText = "GPS desligado"; });
+            }
+        }
+
+        // --- VINCULANDO OS FORMULÁRIOS ---
+        document.querySelector('#registerModal form').onsubmit = registrarAtleta;
+        document.querySelector('#loginModal form').onsubmit = logarAtleta;
+
+        // Inicia o clima
+        getWeather();
+
+    </script>
+</body>
+</html>
+

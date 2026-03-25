@@ -1,0 +1,66 @@
+/* Configurações Gerais */
+:root {
+  --nfl-blue: #013369;
+  --nfl-red: #d50a0a;
+  --dark-bg: #0b0e14;
+  --card-bg: #96a7cb;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--dark-bg);
+  color: white;
+}
+
+/* Layout Responsivo do Grid de Vídeos */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Estilo dos Cards de Jogadas */
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  border: 1px solid #333;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  border-color: var(--nfl-red);
+}
+
+/* Widget de Clima no Canto Superior */
+.weather-widget {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Modais (Janelas de Login/Cadastro) */
+.modal {
+  display: none; /* Escondido por padrão */
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--card-bg);
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+}
