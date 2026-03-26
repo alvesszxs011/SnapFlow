@@ -1,115 +1,133 @@
-/**
- * CONFIGURAÇÕES GERAIS E API
- * Para o clima funcionar, crie uma conta gratuita em: https://openweathermap.org/
- */
-const API_CONFIG = {
-  weatherKey: "0390abddc107b13d8002540d1dd10fc7", // Insira sua chave aqui
-  units: "metric",
-  lang: "pt_br"
+// 1. IMPORTAÇÕES DOS MÓDULOS FIREBASE
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// 2. CONFIGURAÇÃO DO SEU FIREBASE
+const firebaseConfig = {
+    apiKey: "AIzaSyA62bThIoyynk7QVA1_9csgYFbRrXoT2eI",
+    authDomain: "snapflow-23372.firebaseapp.com",
+    projectId: "snapflow-23372",
+    storageBucket: "snapflow-23372.appspot.com",
+    messagingSenderId: "1056580665516",
+    appId: "1:1056580665516:web:6562584144490f23821014"
 };
 
-// --- 1. LÓGICA DO CLIMA (OPENWEATHER API) ---
+// Inicialização
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// --- LÓGICA DO CLIMA ---
 async function fetchWeather() {
-  const weatherText = document.getElementById('temp');
-  
-  if (!navigator.geolocation) {
-      weatherText.innerText = "GPS não suportado";
-      return;
-  }
+    const tempDisplay = document.getElementById('temp');
+    const apiKey = "0390abddc107b13d8002540d1dd10fc7";
 
-  navigator.geolocation.getCurrentPosition(async (position) => {
-      const { latitude, longitude } = position.coords;
-      
-      try {
-          const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_CONFIG.weatherKey}&units=${API_CONFIG.units}&lang=${API_CONFIG.lang}`;
-          const response = await fetch(url);
-          const data = await response.json();
-
-          if (response.ok) {
-              // Atualiza o widget com Cidade, Temp e Ícone
-              const iconUrl = `http://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
-              weatherText.innerHTML = `
-                  <span>${data.name}: <strong>${Math.round(data.main.temp)}°C</strong></span>
-                  <img src="${iconUrl}" alt="clima" class="w-6 h-6 inline-block">
-              `;
-          }
-      } catch (error) {
-          console.error("Erro na API de Clima:", error);
-          weatherText.innerText = "Erro ao carregar";
-      }
-  }, () => {
-      weatherText.innerText = "Acesso negado ao GPS";
-  });
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            try {
+                const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&appid=${apiKey}&units=metric&lang=pt_br`);
+                const data = await res.json();
+                if (res.ok) {
+                    const iconUrl = `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
+                    tempDisplay.innerHTML = `${data.name}: <strong>${Math.round(data.main.temp)}°C</strong> <img src="${iconUrl}" class="w-6 h-6 inline">`;
+                }
+            } catch (e) { tempDisplay.innerText = "Erro no clima"; }
+        });
+    }
 }
 
-// --- 2. CONTROLE DE INTERFACE (MODAIS) ---
-function toggleModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) {
-      const isHidden = modal.classList.contains('hidden');
-      // Fecha todos os outros modais abertos primeiro
-      document.querySelectorAll('[id$="Modal"]').forEach(m => m.classList.add('hidden'));
-      
-      if (isHidden) {
-          modal.classList.remove('hidden');
-          modal.classList.add('flex');
-      } else {
-          modal.classList.add('hidden');
-          modal.classList.remove('flex');
-      }
-  }
+// --- CONTROLE DE MODAIS (INCLUI MENU HAMBÚRGUER) ---
+window.toggleModal = function(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+        const isHidden = modal.classList.contains('hidden');
+        
+        // Se estivermos abrindo um modal de login ou registro, fechamos os outros modais (exceto o menu mobile se quiser mantê-lo)
+        if (id !== 'mobileMenuModal' && isHidden) {
+             document.querySelectorAll('[id$="Modal"]').forEach(m => {
+                m.classList.add('hidden');
+                m.classList.remove('flex');
+             });
+        }
+
+        if (isHidden) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        } else {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+};
+
+// --- MONITOR DE LOGIN ---
+onAuthStateChanged(auth, (user) => {
+    const authBtn = document.getElementById('authBtn');
+    const registerBtnNav = document.getElementById('registerBtnNav');
+    const heroBtn = document.getElementById('heroBtn');
+
+    if (user) {
+        authBtn.innerText = "SAIR";
+        authBtn.onclick = () => deslogar();
+        if(registerBtnNav) registerBtnNav.style.display = 'none';
+        heroBtn.innerText = "VER MEU PAINEL";
+        heroBtn.onclick = () => document.getElementById('modulos').scrollIntoView({behavior: 'smooth'});
+    } else {
+        authBtn.innerText = "ENTRAR";
+        authBtn.onclick = () => toggleModal('loginModal');
+        if(registerBtnNav) registerBtnNav.style.display = 'block';
+        heroBtn.innerText = "COMEÇAR TREINO GRÁTIS";
+        heroBtn.onclick = () => toggleModal('registerModal');
+    }
+});
+
+// --- FUNÇÕES DE CADASTRO E LOGIN ---
+async function registrarAtleta(e) {
+    e.preventDefault();
+    const email = e.target[0].value;
+    const senha = e.target[1].value;
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+        await setDoc(doc(db, "atletas", userCredential.user.uid), {
+            email, data: new Date().toISOString()
+        });
+        alert("Bem-vindo ao time!");
+        toggleModal('registerModal');
+    } catch (error) { alert("Erro: " + error.message); }
 }
 
-// --- 3. CADASTRO DE ATLETA (SALVAMENTO LOCAL) ---
-function handleRegistration(event) {
-  event.preventDefault(); // Impede a página de recarregar
-  
-  const formData = {
-      email: event.target[0].value,
-      senha: event.target[1].value,
-      timeAtual: event.target[2].value,
-      timeFavoritoNFL: event.target[3].value,
-      dataCadastro: new Date().toLocaleDateString()
-  };
-
-  // Salva no LocalStorage (Banco de dados temporário do navegador)
-  localStorage.setItem('atleta_dados', JSON.stringify(formData));
-  
-  alert(`Bem-vindo, Atleta! Seu perfil do ${formData.timeFavoritoNFL} foi criado.`);
-  toggleModal('registerModal');
-  atualizarPerfilNaTela(formData);
+async function logarAtleta(e) {
+    e.preventDefault();
+    try {
+        await signInWithEmailAndPassword(auth, e.target[0].value, e.target[1].value);
+        alert("De volta ao jogo!");
+        toggleModal('loginModal');
+    } catch (error) { alert("Falha no login."); }
 }
 
-// --- 4. SISTEMA DE FILTRO DE CONTEÚDO (ABAS) ---
-function filtrarConteudo(categoria) {
-  const cards = document.querySelectorAll('.card-item'); // Adicione essa classe nos seus cards HTML
-  
-  cards.forEach(card => {
-      if (categoria === 'todos' || card.dataset.tipo === categoria) {
-          card.style.display = 'block';
-          card.style.opacity = '1';
-      } else {
-          card.style.display = 'none';
-      }
-  });
-}
+window.deslogar = function() {
+    signOut(auth).then(() => {
+        alert("Atleta fora de campo!");
+        window.location.reload();
+    });
+};
 
-// --- 5. INICIALIZAÇÃO AO CARREGAR A PÁGINA ---
+// --- AJUSTE DE RESPONSIVIDADE ---
+window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768) {
+        const menu = document.getElementById('mobileMenuModal');
+        if (menu && !menu.classList.contains('hidden')) {
+            toggleModal('mobileMenuModal');
+        }
+    }
+});
+
+// --- INICIALIZAÇÃO ---
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Inicia o Clima
-  fetchWeather();
-
-  // 2. Verifica se o atleta já está logado
-  const dadosSalvos = localStorage.getItem('atleta_dados');
-  if (dadosSalvos) {
-      const atleta = JSON.parse(dadosSalvos);
-      console.log("Atleta logado:", atleta.email);
-      // Aqui você poderia mudar o botão "Entrar" para "Meu Perfil"
-  }
-
-  // 3. Listener para o formulário de cadastro
-  const regForm = document.querySelector('#registerModal form');
-  if (regForm) {
-      regForm.addEventListener('submit', handleRegistration);
-  }
+    fetchWeather();
+    const regForm = document.querySelector('#registerModal form');
+    const logForm = document.querySelector('#loginModal form');
+    if (regForm) regForm.onsubmit = registrarAtleta;
+    if (logForm) logForm.onsubmit = logarAtleta;
 });
