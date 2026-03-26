@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .nfl-gradient { background: linear-gradient(135deg, #013369 0%, #d50a0a 100%); }
+        .nfl-gradient { background: linear-gradient(135deg, #7a0505 0%, #0059ff 100%); }
         .card-blur { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1); }
         #registerModal, #loginModal, #mobileMenuModal { transition: opacity 0.3s ease; }
     </style>
@@ -48,21 +48,53 @@
         </div>
     </header>
 
-    <main id="modulos" class="max-w-6xl mx-auto py-12 px-6">
-        <h2 class="text-3xl font-bold mb-8 border-l-4 border-red-600 pl-4 uppercase tracking-tight">Módulos de Performance</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-red-500 transition group">
-                <div class="h-48 bg-slate-700 flex items-center justify-center relative overflow-hidden">
-                    <i class="fas fa-play-circle text-5xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition cursor-pointer"></i>
-                    <span class="absolute top-2 left-2 bg-red-600 text-[10px] px-2 py-1 rounded font-bold">VÍDEO</span>
+    <main id="modulos">
+        <section id="treinos-especificos" class="max-w-6xl mx-auto py-20 px-6 border-t border-slate-800">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                <div>
+                    <h2 class="text-4xl font-black uppercase italic tracking-tighter">Campo de <span class="text-red-600">Treinamento</span></h2>
+                    <p class="text-slate-400 mt-2">Selecione sua especialidade para drills focados.</p>
                 </div>
-                <div class="p-4">
-                    <h3 class="font-bold text-xl">Footwork: Ladder Drills</h3>
-                    <p class="text-slate-400 text-sm mt-2">Melhore sua agilidade e explosão inicial com exercícios de escada.</p>
+                <div id="filtros-posicao" class="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto">
+                    <button onclick="filtrarPosicao('todos')" class="bg-red-600 px-4 py-2 rounded-full text-xs font-bold uppercase transition">Todos</button>
+                    <button onclick="filtrarPosicao('qb')" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-full text-xs font-bold uppercase border border-slate-700 transition">Quarterback</button>
+                    <button onclick="filtrarPosicao('wr')" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-full text-xs font-bold uppercase border border-slate-700 transition">Receiver</button>
+                    <button onclick="filtrarPosicao('def')" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-full text-xs font-bold uppercase border border-slate-700 transition">Defense</button>
                 </div>
             </div>
-        </div>
+        
+            <div id="grid-treinos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card-treino qb bg-slate-800/50 p-4 rounded-2xl border border-slate-700 hover:border-red-500 transition-all group">
+                    <div class="h-40 bg-slate-900 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+                        <i class="fas fa-football-ball text-4xl text-red-600 group-hover:scale-125 transition"></i>
+                    </div>
+                    <span class="text-[10px] bg-red-600/20 text-red-500 px-2 py-1 rounded font-bold uppercase">Quarterback</span>
+                    <h3 class="font-bold text-lg mt-2">Mecânica de Dropback</h3>
+                    <p class="text-slate-400 text-xs mt-1">3-step e 5-step drop com foco em equilíbrio.</p>
+                    <button class="w-full mt-4 bg-slate-700 py-2 rounded-lg text-xs font-bold hover:bg-red-600 transition">ASSISTIR DRILL</button>
+                </div>
+        
+                <div class="card-treino wr bg-slate-800/50 p-4 rounded-2xl border border-slate-700 hover:border-red-500 transition-all group">
+                    <div class="h-40 bg-slate-900 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+                        <i class="fas fa-running text-4xl text-blue-500 group-hover:scale-125 transition"></i>
+                    </div>
+                    <span class="text-[10px] bg-blue-600/20 text-blue-500 px-2 py-1 rounded font-bold uppercase">Wide Receiver</span>
+                    <h3 class="font-bold text-lg mt-2">Release na Linha</h3>
+                    <p class="text-slate-400 text-xs mt-1">Vencendo o Press Coverage com pés rápidos.</p>
+                    <button class="w-full mt-4 bg-slate-700 py-2 rounded-lg text-xs font-bold hover:bg-red-600 transition">ASSISTIR DRILL</button>
+                </div>
+        
+                <div class="card-treino def bg-slate-800/50 p-4 rounded-2xl border border-slate-700 hover:border-red-500 transition-all group">
+                    <div class="h-40 bg-slate-900 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+                        <i class="fas fa-shield-alt text-4xl text-green-500 group-hover:scale-125 transition"></i>
+                    </div>
+                    <span class="text-[10px] bg-green-600/20 text-green-500 px-2 py-1 rounded font-bold uppercase">Defense</span>
+                    <h3 class="font-bold text-lg mt-2">Tackle Form</h3>
+                    <p class="text-slate-400 text-xs mt-1">Segurança e potência no impacto.</p>
+                    <button class="w-full mt-4 bg-slate-700 py-2 rounded-lg text-xs font-bold hover:bg-red-600 transition">ASSISTIR DRILL</button>
+                </div>
+            </div>
+        </section>
     </main>
 
     <div id="mobileMenuModal" class="hidden fixed inset-0 bg-black/95 flex-col items-center justify-center z-[110] p-6 backdrop-blur-md">
@@ -123,6 +155,29 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // --- LÓGICA DE FILTRO ---
+        window.filtrarPosicao = function(posicao) {
+            const cards = document.querySelectorAll('.card-treino');
+            const botoes = document.querySelectorAll('#filtros-posicao button');
+
+            // Filtra os cards
+            cards.forEach(card => {
+                if (posicao === 'todos' || card.classList.contains(posicao)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // Atualiza estilo dos botões
+            botoes.forEach(btn => {
+                btn.classList.remove('bg-red-600');
+                btn.classList.add('bg-slate-800');
+            });
+            event.currentTarget.classList.remove('bg-slate-800');
+            event.currentTarget.classList.add('bg-red-600');
+        }
 
         async function fetchWeather() {
             const tempDisplay = document.getElementById('temp');

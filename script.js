@@ -131,3 +131,37 @@ document.addEventListener('DOMContentLoaded', () => {
     if (regForm) regForm.onsubmit = registrarAtleta;
     if (logForm) logForm.onsubmit = logarAtleta;
 });
+// --- LÓGICA DE FILTRO DE TREINOS POR POSIÇÃO ---
+window.filtrarPosicao = function(posicao) {
+    const cards = document.querySelectorAll('.card-treino');
+    
+    cards.forEach(card => {
+        if (posicao === 'todos') {
+            card.classList.remove('hidden');
+        } else {
+            // Se o card contém a classe da posição (qb, wr, def)
+            if (card.classList.contains(posicao)) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        }
+    });
+};
+
+// --- AJUSTE NOS LINKS DO MENU PARA ROLAR ATÉ OS TREINOS ---
+// Certifique-se de que o link de "Treinos" no seu HTML tenha href="#treinos-especificos"
+document.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A' && e.target.getAttribute('href') === '#treinos-especificos') {
+        e.preventDefault();
+        const secao = document.getElementById('treinos-especificos');
+        if (secao) {
+            secao.scrollIntoView({ behavior: 'smooth' });
+            // Se o menu mobile estiver aberto, fecha ele
+            const mobileMenu = document.getElementById('mobileMenuModal');
+            if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                toggleModal('mobileMenuModal');
+            }
+        }
+    }
+});
